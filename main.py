@@ -3,7 +3,9 @@ import os
 import json
 import csv
 from dotenv import load_dotenv
+
 load_dotenv()
+
 def main():
     groq_api_key = os.getenv("GROQ_API_KEY")
     if not groq_api_key:
@@ -11,7 +13,7 @@ def main():
         return
 
     try:
-        with open("data.json", "r") as f:
+        with open("job_data.json", "r") as f:
             data = json.load(f)
     except Exception as e:
         print(f"Error loading data: {str(e)}")
@@ -20,11 +22,21 @@ def main():
     analyzer = GroqResponseAnalyzer(groq_api_key)
     all_jobs = []
 
-    for title, content in data.items():
-        print(f"Processing: {title}")
+    for source_link, content in data.items():
+        print(f"Processing: {source_link}")
         jobs = analyzer.extract_jobs(content)
+        
         if jobs and isinstance(jobs, list):
-            all_jobs.extend(jobs)
+            # Filter and format the job entries
+            for job in jobs:
+                # Create new dict with only required fields
+                filtered_job = {
+                    "company": job.get("company", "N/A"),
+                    "jobrole": job.get("jobrole", "N/A"),
+                    "title": job.get("title", "N/A"),
+                    "source_link": source_link
+                }
+                all_jobs.append(filtered_job)
             print(f"Found {len(jobs)} jobs")
         else:
             print("No jobs found in this section")
@@ -32,7 +44,7 @@ def main():
     # Save to CSV
     if all_jobs:
         with open("jobs.csv", "w", newline="", encoding="utf-8") as csvfile:
-            fieldnames = ["company", "title", "description", "source"]
+            fieldnames = ["company", "jobrole", "title", "source_link"]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(all_jobs)
@@ -42,5 +54,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
-    

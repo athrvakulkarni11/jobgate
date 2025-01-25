@@ -11,7 +11,7 @@ load_dotenv()
 api_key = os.getenv("API_KEY")
 idx = os.getenv("SEARCH_ENGINE_ID")
 
-job_listing_websites = ["glassdoor", "indeed", "naukri", "monster", "shine", "timesjobs", "linkedin"]
+job_listing_websites = [ "timesjobs", "linkedin"]
 
 def google_search(query, api_key, idx, num_results):
     url = "https://www.googleapis.com/customsearch/v1"
@@ -26,7 +26,7 @@ def google_search(query, api_key, idx, num_results):
         response.raise_for_status()
         results = response.json()
         return [item['link'] for item in results.get('items', [])]
-    except requests.exceptions.HTTPError as err:
+    except requests.exceptions.HTTPError as err:    
         print(f"HTTP error occurred: {err}")
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -34,11 +34,10 @@ def google_search(query, api_key, idx, num_results):
 
 results = []
 for website in job_listing_websites:
-    query = f"list current jobs as AI engineer at {website}"
-    res = google_search(query, api_key, idx, 5)
+    query = f"list jobs for software engineer role from {website}"
+    res = google_search(query, api_key, idx, 10)
     results.extend(res)
-    time.sleep(random.uniform(1, 3))  # Add a delay to avoid being flagged as a bot
-
+    time.sleep(random.uniform(1, 3)) 
 print(f"Found {len(results)} results")
 
 jsn = {}
@@ -65,4 +64,4 @@ with open("data.json", "w") as file:
     json.dump(jsn, file, indent=4)
 
 # print(f"Data saved to data.json with {len(jsn)} entries.")
- 
+ # error day 1 with bhola fir mess original character serious operation what seirous shre shre downlaod sierous operation wha seiorus operation what seiorus opera what seirous resutls seirous operation wht serious power read wht sirous power area what seirous opeation what serious power read day 1 with seirous operatio nwhat aarushseirous operation what sierous ower read seirous operatio nwhat seirop pwoer read what resutls seirous operatio nwha tseirous power read what sieorsu oper
