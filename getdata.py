@@ -6,12 +6,12 @@ import json
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
+ 
 load_dotenv()
 api_key = os.getenv("API_KEY")
 idx = os.getenv("SEARCH_ENGINE_ID")
 
-job_listing_websites = [ "timesjobs", "linkedin"]
+job_listing_websites = [ "timesjobs", "linkedin","indeed","glassdoor","naukri","monster","shine","freshersworld","internshala","angel","cutshort","hacker","hired","hirist","iimjobs","jobspire","jobstreet","jobvite","jobz","joveo","juju","kforce","lensa","linkup","lucid","ladders","mashable","mynextmove","neuvoo","nijobs","nyc","onewire","recruitics","recruit","recruiter","recruiting","recruitment","recruitmilitary","recruitics"]
 
 def google_search(query, api_key, idx, num_results):
     url = "https://www.googleapis.com/customsearch/v1"
@@ -56,7 +56,7 @@ for res in results:
             if title and paragraphs:
                 jsn[f"{counter + 1}: {title.text.strip()}"] = [p.text.strip() for p in paragraphs]
                 counter += 1
-        time.sleep(random.uniform(2, 5))  # Throttle scraping requests
+        time.sleep(random.uniform(2, 5))  
     except Exception as e:
         print(f"Error scraping {res}: {e}")
 
@@ -64,4 +64,3 @@ with open("data.json", "w") as file:
     json.dump(jsn, file, indent=4)
 
 # print(f"Data saved to data.json with {len(jsn)} entries.")
- # error day 1 with bhola fir mess original character serious operation what seirous shre shre downlaod sierous operation wha seiorus operation what seiorus opera what seirous resutls seirous operation wht serious power read wht sirous power area what seirous opeation what serious power read day 1 with seirous operatio nwhat aarushseirous operation what sierous ower read seirous operatio nwhat seirop pwoer read what resutls seirous operatio nwha tseirous power read what sieorsu oper
