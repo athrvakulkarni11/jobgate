@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import re
 from fastapi import FastAPI
 from urllib.parse import quote
+import uvicorn
 
 app = FastAPI()
 
@@ -106,3 +107,6 @@ def get_jobs_list():
     except requests.RequestException as e:
         print(f"Error fetching jobs: {e}")
         return []
+    
+if __name__ == "__main__":
+    uvicorn.run("linkedin_scrapper:app", host="0.0.0.0", port=8000)    
