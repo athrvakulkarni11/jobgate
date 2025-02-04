@@ -125,6 +125,7 @@ if __name__ == "__main__":
     # Example 2: Scrape multiple pages
     urls = [
         "https://www.naukri.com/jobs-in-india",
+        "https://in.linkedin.com/jobs/view/software-engineer-machine-learning-at-linkedin-4102540455?position=1&pageNum=0&refId=kmKv0UxNbvPnkycOVuhnzA%3D%3D&trackingId=dG06Z58K8hlk5miwELqaig%3D%3D",
     ]
     
     selectors = {
