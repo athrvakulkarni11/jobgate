@@ -107,6 +107,80 @@ def get_jobs_list():
     except requests.RequestException as e:
         print(f"Error fetching jobs: {e}")
         return []
-    
+
+@app.get("/get_indeed_jobs")
+def get_indeed_jobs(job_title: str, location: str = "india"):
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+        
+        encoded_job_title = quote(job_title)
+        encoded_location = quote(location)
+        url = f"https://www.indeed.com/jobs?q={encoded_job_title}&l={encoded_location}"
+        
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        jobs_list = []
+        job_cards = soup.find_all('div', class_='job_seen_beacon')
+        
+        for card in job_cards:
+            title = card.find('h2', class_='jobTitle')
+            company = card.find('span', class_='companyName')
+            location = card.find('div', class_='companyLocation')
+            job_link = card.find('a', class_='jcs-JobTitle')
+            
+            if title and company and location and job_link:
+                jobs_list.append({
+                    'title': title.get_text().strip(),
+                    'company': company.get_text().strip(),
+                    'location': location.get_text().strip(),
+                    'link': 'https://www.indeed.com' + job_link.get('href', '')
+                })
+        
+        return jobs_list
+    except requests.RequestException as e:
+        print(f"Error fetching Indeed jobs: {e}")
+        return []
+
+@app.get("/get_glassdoor_jobs")
+def get_glassdoor_jobs(job_title: str, location: str = "india"):
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+        
+        encoded_job_title = quote(job_title)
+        encoded_location = quote(location)
+        url = f"https://www.glassdoor.com/Job/jobs.htm?sc.keyword={encoded_job_title}&locT=C&locId={encoded_location}"
+        
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        jobs_list = []
+        job_listings = soup.find_all('li', class_='react-job-listing')
+        
+        for job in job_listings:
+            title = job.find('a', class_='jobLink')
+            company = job.find('div', class_='emp-name')
+            location = job.find('span', class_='loc')
+            job_link = job.find('a', class_='jobLink')
+            
+            if title and company and location and job_link:
+                jobs_list.append({
+                    'title': title.get_text().strip(),
+                    'company': company.get_text().strip(),
+                    'location': location.get_text().strip(),
+                    'link': 'https://www.glassdoor.com' + job_link.get('href', '')
+                })
+        
+        return jobs_list
+    except requests.RequestException as e:
+        print(f"Error fetching Glassdoor jobs: {e}")
+        return []
+
 if __name__ == "__main__":
     uvicorn.run("linkedin_scrapper:app", host="0.0.0.0", port=8000)    
