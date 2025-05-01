@@ -63,4 +63,3 @@ for res in results:
 with open("data.json", "w") as file:
     json.dump(jsn, file, indent=4)
 
-# print(f"Data saved to data.json with {len(jsn)} entries.")
